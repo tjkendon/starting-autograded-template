@@ -1,0 +1,105 @@
+name: Submit this assessment.
+
+on:
+  workflow_dispatch:
+    inputs:
+      MRU_username:
+        description: "MRU Username?"
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout thy repository
+        uses: actions/checkout@v2
+
+      - name: Set up env vars
+        run: |
+          repo="${GITHUB_REPOSITORY//*\//}"
+          echo "::set-env name=repo::$repo"
+
+      - name: Show env vars
+        run: env
+
+      - name: Set up Java14, my good fellow
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: wget standard test files and such
+        run: |
+          rm -rf ./lib
+          rm -rf ./config
+          rm -rf ./src/test
+          wget "https://github.com/MRU-CSIS-1501-DEV-PLAYGROUND/friend-list-libs-and-tests/raw/master/friend-list-libs-and-tests.zip" -P /tmp
+          unzip /tmp/friend-list-libs-and-tests.zip -d /tmp/defaults
+          mv /tmp/defaults/src/test ./src/test
+          mv /tmp/defaults/config ./config
+          mv /tmp/defaults/lib ./lib
+          cp /tmp/defaults/cisummarizer-all.jar ./
+          mkdir results
+          mkdir reports
+
+      - name: Compile that source code like a bandit
+        run: |
+          javac -d bin -cp "src/test:src/main:lib/*" src/test/*.java src/main/*.java 2> results/compilation-results.txt
+          cat results/compilation-results.txt
+
+      - name: Run the PMD, posthaste
+        if: ${{ always() }}
+        run: |
+          wget "https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.26.0/pmd-bin-6.26.0.zip" -P /tmp
+          unzip /tmp/pmd-bin-6.26.0.zip -d /tmp
+          mv /tmp/pmd-bin-6.26.0 $HOME/pmd
+          chmod +x $HOME/pmd/bin/run.sh
+          $HOME/pmd/bin/run.sh pmd -d ./src/main -R config/pmd/comp1501-pmd-rules.xml -f xml -r results/pmd-results.xml
+          $HOME/pmd/bin/run.sh pmd -d ./src/main -R config/pmd/comp1501-pmd-rules.xml -f textcolor
+
+      - name: Check all the styles
+        if: ${{ always() }}
+        run: |
+          wget "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.34/checkstyle-8.34-all.jar" -P /tmp
+          java -Dconfig_loc="config/checkstyle" -jar /tmp/checkstyle-8.34-all.jar -c config/checkstyle/1501-checks.xml src/main/*.java
+          java -Dconfig_loc="config/checkstyle" -jar /tmp/checkstyle-8.34-all.jar -c config/checkstyle/1501-checks.xml src/main/*.java -f xml -o results/checkstyle-results.xml
+
+      - name: Testing the heck outta the codes
+        if: ${{ always() }}
+        run: |
+          wget "https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar" -P /tmp
+          java -jar /tmp/junit-platform-console-standalone-1.6.2.jar --class-path "bin:lib/assertj-core-3.16.1.jar:lib/system-lambda-1.0.0.jar" --disable-banner --scan-class-path --reports-dir=results
+
+      - name: Save text run of test
+        if: ${{ always() }}
+        run: |
+          java -jar /tmp/junit-platform-console-standalone-1.6.2.jar --class-path "bin:lib/assertj-core-3.16.1.jar:lib/system-lambda-1.0.0.jar" --disable-banner --disable-ansi-colors --scan-class-path --details=tree 1> results/pretty-test-results.txt
+          ls -al ./results
+
+      - name: Figuring out what this all meant
+        if: ${{ always() }}
+        run: |
+          ls -al ./results
+          mv ./results/TEST-junit-jupiter.xml ./results/junit-results.xml
+          rm -f ./results/TEST-junit-vintage.xml
+          ls -al ./results
+          java -jar ./cisummarizer-all.jar $GITHUB_REPOSITORY
+          cat reports/summary-report.txt
+
+      - name: Save the results, just because
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.repo}}-${{ github.event.inputs.MRU_username }}
+          path: |
+            reports/
+            results/
+
+      - name: Create an issue from the result. Despair? Jubilation?
+        if: ${{ always() }}
+        uses: peter-evans/create-issue-from-file@v2
+        with:
+          title: A summary was created
+          content-filepath: ./reports/summary-report.txt
+          labels: report
