@@ -25,7 +25,7 @@ jobs:
         run: env
 
       - name: Set up Java14, my good fellow
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v1.4.2
         with:
           java-version: 14
 
@@ -91,7 +91,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{env.repo}}-${{ github.event.inputs.MRU_username }}
+          name: ${{ github.event.inputs.MRU_username }}-${{env.repo}}
           path: |
             reports/
             results/
