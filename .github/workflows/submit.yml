@@ -29,7 +29,7 @@ jobs:
         with:
           java-version: 14
 
-      - name: wget standard test files and such
+      - name: Get standard test files and such
         run: |
           rm -rf ./lib
           rm -rf ./config
