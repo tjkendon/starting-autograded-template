@@ -19,7 +19,9 @@ jobs:
       - name: Set up env vars
         run: |
           repo="${GITHUB_REPOSITORY//*\//}"
-          echo "::set-env name=repo::$repo"
+          nowish="$(TZ=America/Edmonton date +'%Y-%m-%dT%H-%M')"
+          echo "::set-env name=REPO::$repo"
+          echo "::set-env name=NOW::$nowish"
 
       - name: Show env vars
         run: env
@@ -100,7 +102,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ github.event.inputs.MRU_username }}-${{env.repo}}
+          name: ${{ github.event.inputs.MRU_username }}-${{env.REPO}}_${{env.NOW}}
           path: |
             reports/
             results/
