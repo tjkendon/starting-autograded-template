@@ -19,7 +19,7 @@ jobs:
       - name: Set up env vars
         run: |
           repo="${GITHUB_REPOSITORY//*\//}"
-          nowish="$(TZ=America/Edmonton date +'%Y-%m-%dT%H-%M')"
+          nowish="$(TZ=America/Edmonton date +'%Y-%m-%dT%H-%M-%S')"
           echo "::set-env name=REPO::$repo"
           echo "::set-env name=NOW::$nowish"
 
