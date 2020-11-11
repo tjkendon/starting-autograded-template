@@ -23,14 +23,14 @@ jobs:
         run: |
           repo="${GITHUB_REPOSITORY//*\//}"
           nowish="$(TZ=America/Edmonton date +'%Y-%m-%dT%H-%M-%S')"
-          echo "::set-env name=REPO::$repo"
-          echo "::set-env name=NOW::$nowish"
+          echo "REPO=$repo" >> $GITHUB_ENV
+          echo "NOW=$nowish" >> $GITHUB_ENV
 
       - name: Show env vars
         run: env
 
       - name: Set up Java14, my good fellow
-        uses: actions/setup-java@v1.4.2
+        uses: actions/setup-java@v1.4.3
         with:
           java-version: 14
 
@@ -39,8 +39,9 @@ jobs:
           rm -rf ./lib
           rm -rf ./config
           rm -rf ./src/test
-          wget "https://github.com/MRU-CSIS-1501-DEV-PLAYGROUND/friend-list-libs-and-tests/raw/master/friend-list-libs-and-tests.zip" -P /tmp
-          unzip /tmp/friend-list-libs-and-tests.zip -d /tmp/defaults
+          # TODO: make sure you replace this with the **raw** location of the zip file for this assessment
+          wget "https://github.com/jpratt-mru/1501-autograding-zips/blob/main/sassy-tests.zip?raw=true" -O /tmp/sassy-tests.zip
+          unzip /tmp/sassy-tests.zip -d /tmp/defaults
           mv /tmp/defaults/src/test ./src/test
           mv /tmp/defaults/config ./config
           mv /tmp/defaults/lib ./lib
