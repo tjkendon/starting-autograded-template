@@ -39,9 +39,8 @@ jobs:
           rm -rf ./lib
           rm -rf ./config
           rm -rf ./src/test
-          # TODO: make sure you replace this with the **raw** location of the zip file for this assessment
-          wget "https://github.com/jpratt-mru/1501-autograding-zips/blob/main/sassy-tests.zip?raw=true" -O /tmp/sassy-tests.zip
-          unzip /tmp/sassy-tests.zip -d /tmp/defaults
+          wget "REPLACE-ZIP-LOCATION" -O /tmp/ZIP-NAME.zip
+          unzip /tmp/ZIP-NAME.zip -d /tmp/defaults
           mv /tmp/defaults/src/test ./src/test
           mv /tmp/defaults/config ./config
           mv /tmp/defaults/lib ./lib
