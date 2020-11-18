@@ -341,7 +341,7 @@
             <property name="optional" value="true"/>
         </module>
         <module name="VisibilityModifier">
-            <property name="packageAllowed" value="true"/>
+            <property name="packageAllowed" value="false"/>
         </module>
     </module>
 </module>
