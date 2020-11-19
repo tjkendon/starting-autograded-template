@@ -14,8 +14,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     continue-on-error: true
-    env:
-      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
     steps:
       - name: Checkout thy repository
@@ -115,7 +113,7 @@ jobs:
 
       - name: Create an issue from the result
         if: ${{ always() }}
-        uses: peter-evans/create-issue-from-file@v2.3.1
+        uses: peter-evans/create-issue-from-file@v2.3.2
         with:
           title: A summary report of your submission was created
           content-filepath: ./reports/summary-report.txt
