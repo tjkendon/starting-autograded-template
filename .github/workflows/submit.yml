@@ -14,6 +14,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     continue-on-error: true
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
     steps:
       - name: Checkout thy repository
@@ -44,6 +46,7 @@ jobs:
           mv /tmp/defaults/src/test ./src/test
           mv /tmp/defaults/config ./config
           mv /tmp/defaults/lib ./lib
+          wget "https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.7.0/junit-platform-console-standalone-1.7.0.jar" -O ./lib/junit-platform-console-standalone-1.7.0.jar
           cp /tmp/defaults/cisummarizer-all.jar ./
           mkdir results
           mkdir reports
