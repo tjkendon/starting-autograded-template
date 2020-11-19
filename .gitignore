@@ -5,4 +5,20 @@ tmp/
 *.bak
 *.swp
 .vscode
-.DS_Store*
+
+# OS generated files #
+# from https://simpleit.rocks/git/make-git-ignore-temporary-files-produced-by-emacs-and-vim-in-all-directories-globally/ #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.keep
+
+# emacs files #
+*~
+\#*\#
+
