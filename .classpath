@@ -5,12 +5,11 @@
 			<attribute name="ignore_optional_problems" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/assertj-core-3.17.2.jar"/>
 	<classpathentry kind="lib" path="lib/system-lambda-1.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-jupiter-params-5.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-platform-console-standalone-1.7.0.jar"/>
->>>>>>> cfc9fbe47938b4bb2cb28dc1343c4a132b6d4f3c
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
